@@ -1,10 +1,4 @@
 #!/usr/bin/env bash
-#
-# Obfuscate by @CesarHackGray
-# Contacta https://t.me/CesarGray
-# Channel: https://www.youtube.com/channel/UCjs0N8PbEo-se0r_4O_svNQ
-#
-#
 CesarHackGray=$(mktemp)
 base64 -d  >${CesarHackGray}<<DIXIE
 IyEvYmluL2Jhc2gKVE1QRklMRT0iL3Jvb3QvdG1wLmpzb24iClYyUkFZRklMRT0iL2V0Yy92MnJh
