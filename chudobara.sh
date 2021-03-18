@@ -3,11 +3,11 @@ TMPFILE="/root/tmp.json"
 V2RAYFILE="/etc/v2ray/config.json"
 _banner () {
   echo "==================================="
-  echo "=      CREATED BY PHC_JAYVEE      ="
+  echo "=      CREATED BY @CHUDOBARA      ="
   echo "==================================="
 }
 display_uuid () {
-  printf "\033[1;32mYOUR ACTIVE UUID\033[0m\n"
+  printf "\033[1;32mSU/S UUID ACTIVOS:\033[0m\n"
   x=0
   for i in $(jq -r ".inbounds[].settings.clients[].id" $V2RAYFILE)
   do
@@ -17,15 +17,15 @@ display_uuid () {
   printf "\n\n"
 }
 ask_end () {
-  read -r -p "$(printf '\033[1;32mDo you want to continue? \033[1;33m\033[1;32m[y/n] \033[1;33m\n')" CONFEXIT
+  read -r -p "$(printf '\033[1;32mSEGURO QUE DESEA CONTINUAR? \033[1;33m\033[1;32m[s/n] \033[1;33m\n')" CONFEXIT
   case $CONFEXIT in  
-    y|Y) clear
+    s|S) clear
     start_run ;; 
     n|N) printf '\033[1;32mOKAY exiting... \033[1;33m\n'
       sleep 2
       exit
       ;; 
-    *) printf "\033[1;31mINVALID CHOICE. Only y/n are allowed\033[0m\n"
+    *) printf "\033[1;31mRESPUESTA INVALIDA. ELIJA s/n\033[0m\n"
       sleep 2
       clear
       start_run
@@ -35,15 +35,15 @@ ask_end () {
 }
 display_menu () {
   printf "\033[1;32m-- MENU --\033[0m\n"
-  printf "[\033[1;32m1\033[0m]\033[1;36m ADD\033[0m\n"
-  printf "[\033[1;32m2\033[0m]\033[1;36m DELETE\033[0m\n"
-  printf "[\033[1;32m3\033[0m]\033[1;36m EXIT\033[0m\n"
+  printf "[\033[1;32m1\033[0m]\033[1;36m AGREGAR USUARIO\033[0m\n"
+  printf "[\033[1;32m2\033[0m]\033[1;36m ELIMINIAR USUARIO\033[0m\n"
+  printf "[\033[1;32m3\033[0m]\033[1;36m SALIR\033[0m\n"
 }
 DoDelete_uuid () {
   jq 'del(.inbounds[].settings.clients['"$1"'])' $V2RAYFILE >> $TMPFILE
   cat $TMPFILE > $V2RAYFILE
   rm $TMPFILE
-  printf "\033[1;32mDONE\033[0m\n"
+  printf "\033[1;32mECHO\033[0m\n"
   systemctl restart v2ray &>/dev/null
   sleep 2
   if [[ "$ASKCONTINUE" == "true" ]]
@@ -54,31 +54,31 @@ DoDelete_uuid () {
 delete_uuid () {
   _banner
   display_uuid
-  read -r -p "$(printf '\033[1;32mWhat do you want to delete? \033[1;33m\n')" DELINPUT
+  read -r -p "$(printf '\033[1;32mSEGURO QUE QUIERE ELIMINAR? \033[1;33m\n')" DELINPUT
   re='^[0-9]+$'
   if ! [[ $DELINPUT =~ $re ]] ; then
-    printf "\033[1;31mINVALID CHOICE. Only numbers are allowed\033[0m\n"
+    printf "\033[1;31mELECCION INVALIDA. SOLO COLOQUE NUMEROS\033[0m\n"
     sleep 2
     clear
     delete_uuid
   fi
   if [[ $(jq -r ".inbounds[].settings.clients[$DELINPUT].id" $V2RAYFILE) == null ]]
   then
-    printf "\033[1;31mINVALID CHOICE\033[0m\n"
+    printf "\033[1;31mELECCION INVALIDA\033[0m\n"
     sleep 2
     clear
     delete_uuid
   else
-    printf "\033[1;32mAre you sure you want to delete this UUID ? \033[1;36m"$(jq -r ".inbounds[].settings.clients[$DELINPUT].id" $V2RAYFILE) "\033[1;33m\n"
-    read -r -p "$(printf '\033[1;32m[y/n] \033[1;33m\n')" DELCONFINPUT
+    printf "\033[1;32mESTA SEGURO DE ELIMINAR ESTE UUID ? \033[1;36m"$(jq -r ".inbounds[].settings.clients[$DELINPUT].id" $V2RAYFILE) "\033[1;33m\n"
+    read -r -p "$(printf '\033[1;32m[s/n] \033[1;33m\n')" DELCONFINPUT
     case $DELCONFINPUT in  
-      y|Y) DoDelete_uuid "$DELINPUT" ;; 
+      s|S) DoDelete_uuid "$DELINPUT" ;; 
       n|N) printf '\033[1;32mOKAY \033[1;33m\n'
         sleep 2
         clear
         start_run
         ;; 
-      *) printf "\033[1;31mINVALID CHOICE. Only y/n are allowed\033[0m\n"
+      *) printf "\033[1;31mRESPUESTA INVALIDA. ELIJA s/n\033[0m\n"
         sleep 2
         clear
         delete_uuid
@@ -108,12 +108,12 @@ DoUUIDAdd (){
   fi
 }
 add_existing_uuid () {
-  read -r -p "$(printf '\033[1;32mEnter UUID \033[1;33m\n')" UUIDINP
-  read -r -p "$(printf '\033[1;32mDo you like to add expired date? [y/n]\033[1;33m\n')" ASKFOREXPDATE
+  read -r -p "$(printf '\033[1;32mINGRESE UUID \033[1;33m\n')" UUIDINP
+  read -r -p "$(printf '\033[1;32mQUIERE AGREGAR FECHA DE EXPIRACION? [s/n]\033[1;33m\n')" ASKFOREXPDATE
   case $ASKFOREXPDATE in
 
-    y|Y)
-      read -r -p "$(printf '\033[1;32mHow many days?\033[1;33m\n')" INPEXPDATE
+    s|S)
+      read -r -p "$(printf '\033[1;32mCUANTOS DIAS?\033[1;33m\n')" INPEXPDATE
       if [[ -n ${input//[0-9]/} ]]; then
         printf "\033[1;31mINVALID CHOICE\033[0m\n"
         sleep 2
@@ -131,7 +131,7 @@ add_existing_uuid () {
       ;;
 
     *)
-      printf "\033[1;31mINVALID CHOICE\033[0m\n"
+      printf "\033[1;31mELECCION INVALIDA\033[0m\n"
       sleep 2
       clear
       add_existing_uuid
@@ -141,13 +141,13 @@ add_existing_uuid () {
 add_generated_uuid () {
   TheUUID=$(curl -skL -w "\n" https://www.uuidgenerator.net/api/version4)
   printf "\033[1;33mYour UUID Code:\033[1;36m $TheUUID\033[0m\n"
-  read -r -p "$(printf '\033[1;32mDo you like to add expired date? [y/n]\033[1;33m\n')" ASKFOREXPDATE
+  read -r -p "$(printf '\033[1;32mQUIERE AGREGAR FECHA DE EXPIRACION? [s/n]\033[1;33m\n')" ASKFOREXPDATE
   case $ASKFOREXPDATE in
 
-    y|Y)
-      read -r -p "$(printf '\033[1;32mHow many days? \033[1;33m\n')" INPEXPDATE
+    s|S)
+      read -r -p "$(printf '\033[1;32mCUANTOS DIAS? \033[1;33m\n')" INPEXPDATE
       if [[ -n ${input//[0-9]/} ]]; then
-        printf "\033[1;31mINVALID CHOICE\033[0m\n"
+        printf "\033[1;31mELECCION INVALIDA\033[0m\n"
         sleep 2
         clear
         add_generated_uuid
@@ -163,7 +163,7 @@ add_generated_uuid () {
       ;;
 
     *)
-      printf "\033[1;31mINVALID CHOICE\033[0m\n"
+      printf "\033[1;31mELECCION INVALIDA\033[0m\n"
       sleep 2
       clear
       add_generated_uuid
@@ -174,9 +174,9 @@ add_uuid () {
   clear
   _banner
   printf "\033[1;32m-- MENU --\033[0m\n"
-  printf "[\033[1;32m1\033[0m]\033[1;36m Add existing UUID\033[0m\n"
-  printf "[\033[1;32m2\033[0m]\033[1;36m Generate New then add\033[0m\n"
-    read -r -p "$(printf '\033[1;32mWhat do you want to do? \033[1;33m\n')" ADDINPUT
+  printf "[\033[1;32m1\033[0m]\033[1;36m AGREAGAR UUID EXISTENTE\033[0m\n"
+  printf "[\033[1;32m2\033[0m]\033[1;36m GENERAR NUEVO\033[0m\n"
+    read -r -p "$(printf '\033[1;32mque quieres hacer? \033[1;33m\n')" ADDINPUT
 
 
   case $ADDINPUT in
@@ -190,7 +190,7 @@ add_uuid () {
       ;;
 
     *)
-      printf "\033[1;31mINVALID CHOICE\033[0m\n"
+      printf "\033[1;31mELLECION INVALIDA\033[0m\n"
       sleep 2
       clear
       add_uuid
@@ -201,7 +201,7 @@ start_run(){
   _banner
   display_uuid
   display_menu
-  read -r -p "$(printf '\033[1;32mWhat do you want to do? \033[1;33m\n')" INPUT
+  read -r -p "$(printf '\033[1;32mque quieres hacer? \033[1;33m\n')" INPUT
 
 
   case $INPUT in
@@ -224,7 +224,7 @@ start_run(){
       ;;
 
     *)
-      printf "\033[1;31mINVALID CHOICE\033[0m\n"
+      printf "\033[1;31mELECCION INVALIDA\033[0m\n"
       sleep 2
       clear
       _banner
