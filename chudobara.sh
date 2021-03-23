@@ -37,6 +37,7 @@ display_menu () {
   printf "\033[1;32m-- MENU --\033[0m\n"
   printf "[\033[1;32m1\033[0m]\033[1;36m AGREGAR USUARIO\033[0m\n"
   printf "[\033[1;32m2\033[0m]\033[1;36m ELIMINIAR USUARIO\033[0m\n"
+  printf "[\033[1;32m2\033[0m]\033[1;36m MOSTRAR VMESS\033[0m\n"
   printf "[\033[1;32m3\033[0m]\033[1;36m SALIR\033[0m\n"
 }
 DoDelete_uuid () {
@@ -217,7 +218,9 @@ start_run(){
       clear
       delete_uuid
       ;;
-    3)
+    3)  cat v2ray_info.inf
+      ;;
+    4)
       printf '\033[1;32mOKAY \033[1;33m\n'
       sleep 2
       exit
