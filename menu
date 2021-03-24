@@ -38,7 +38,7 @@ display_menu () {
   printf "[\033[1;32m1\033[0m]\033[1;36m AGREGAR USUARIO\033[0m\n"
   printf "[\033[1;32m2\033[0m]\033[1;36m ELIMINIAR USUARIO\033[0m\n"
   printf "[\033[1;32m3\033[0m]\033[1;36m MOSTRAR VMESS\033[0m\n"
-  printf "[\033[1;32m3\033[0m]\033[1;36m SALIR\033[0m\n"
+  printf "[\033[1;32m4\033[0m]\033[1;36m SALIR\033[0m\n"
 }
 DoDelete_uuid () {
   jq 'del(.inbounds[].settings.clients['"$1"'])' $V2RAYFILE >> $TMPFILE
